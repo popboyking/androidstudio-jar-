@@ -1,0 +1,101 @@
+apply plugin:'com.android.application'
+import com.android.build.gradle.AppPlugin
+import proguard.gradle.ProGuardTask
+
+android {
+    compileSdkVersion 23
+    buildToolsVersion "23.0.2"
+
+    defaultConfig {
+        applicationId "dex.zzcm.com.dexupdate"
+        minSdkVersion 23
+        targetSdkVersion 23
+        versionCode 1
+        versionName "1.0"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    testCompile 'junit:junit:4.12'
+
+    compile 'com.android.support:appcompat-v7:23.2.0'
+    compile 'com.android.support:design:23.2.0'
+}
+
+/*************************************JAR 打包混淆*******************************************************/
+//dependsOn 可根据实际需要增加或更改
+task buildJar(dependsOn: ['build'], type: Jar) {
+
+    appendix = "demo"
+    baseName = "androidJar"
+    version = "1.0.0"
+    classifier = "release"
+
+    //后缀名
+    extension = "jar"
+    //最终的 Jar 包名，如果没设置，默认为 [baseName]-[appendix]-[version]-[classifier].[extension]
+    archiveName = "SDK1.0_release.jar"
+
+    //需打包的资源所在的路径集
+    def srcClassDir = [project.buildDir.absolutePath + "/intermediates/classes/release/"]
+    println('源代码目录  :'+srcClassDir)
+    //初始化资源路径集
+    from srcClassDir
+
+    //asset 目录路径
+    def assetsDir =[project.buildDir.absolutePath + "/intermediates/assets/release"]
+    from assetsDir
+
+    //去除路径集下部分的资源
+//    exclude "com/MainActivity.class"
+//    exclude "com/MainActivity\$*.class"
+    exclude "dex/zzcm/com/dexupdate/BuildConfig.class"
+    exclude "dex/zzcm/com/dexupdate/BuildConfig\$*.class"
+    exclude "**/R.class"
+    exclude "**/R\$*.class"
+
+    //只导入资源路径集下的部分资源
+    include "assets/**"
+    include "dex/**/*.class"
+}
+
+task proguardJar(dependsOn: ['buildJar'], type: ProGuardTask) {
+    configuration android.getDefaultProguardFile('proguard-android.txt')
+//    configuration 'proguard-rules.pro'
+    String inJar = project.buildDir.getAbsolutePath()+"/libs";
+    println("混淆输出目录:"+inJar)
+    //输入 jar
+    injars inJar
+    //输出 jar
+    outjars inJar+ "/proguard-${buildJar.archiveName}"
+
+    //设置不删除未引用的资源(类，方法等)
+    dontshrink
+
+    AppPlugin appPlugin = getPlugins().findPlugin(AppPlugin)
+    if (appPlugin != null) {
+        List<String> runtimeJarList
+        if (appPlugin.getMetaClass().getMetaMethod("getRuntimeJarList")) {
+            runtimeJarList = appPlugin.getRuntimeJarList()
+        } else if (android.getMetaClass().getMetaMethod("getBootClasspath")) {
+            runtimeJarList = android.getBootClasspath()
+        } else {
+            runtimeJarList = appPlugin.getBootClasspath()
+        }
+
+        for (String runtimeJar : runtimeJarList) {
+            //给 proguard 添加 runtime
+            libraryjars(runtimeJar)
+        }
+    }
+}
+/****************************************************************************************************/
