@@ -1,6 +1,8 @@
 # androidstudio-jar-
-androidstudio 打包jar和混淆
 
+
+
+一、热修复
 
 这个项目原本是用来展示如何打包用的,最近在研究热修复动态加载,所以有了以下目录:
 
@@ -17,4 +19,6 @@ androidstudio 打包jar和混淆
 http://blog.csdn.net/lmj623565791/article/details/49883661
 
 
+二、打包
+执行gradle task 里的buildJar方法进行打包操作
 注意修改打包目录的包名路径！
