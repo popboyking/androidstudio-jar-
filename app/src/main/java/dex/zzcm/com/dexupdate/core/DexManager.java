@@ -37,10 +37,7 @@ public class DexManager
             e.printStackTrace();
         }
 
-        File f = new File ("/storage/emulated/0/updateDex/path.jar");
-        if(f.exists()){
-            loadDex(context,f,USER);
-        }
+
     }
 
     public static void loadDex(Context context,File fromFile,String classFullName){

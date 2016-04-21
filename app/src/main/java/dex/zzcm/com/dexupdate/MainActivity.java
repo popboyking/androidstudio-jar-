@@ -23,16 +23,16 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
     Button btn_fix,btn_getFix;
     TextView txt_source;
-    SourceSystemManager ssm ;
+//    SourceSystemManager ssm ;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        ssm = new SourceSystemManager();
+//        ssm = new SourceSystemManager();
         this.setContentView(R.layout.activity_main);
 
         txt_source = (TextView) findViewById(R.id.txt_source);
-        txt_source.setText("修复前:"+ssm.getSource());
+//        txt_source.setText("修复前:"+ssm.getSource());
         btn_fix = (Button) findViewById(R.id.fix);
 
         btn_fix.setOnClickListener(this);
@@ -41,7 +41,9 @@ public class MainActivity extends Activity implements View.OnClickListener {
         btn_getFix.setOnClickListener(this);
 
 
-        Toast.makeText(this,SourceSystemManager.printName(),Toast.LENGTH_LONG).show();
+//        Toast.makeText(this,SourceSystemManager.printName(),Toast.LENGTH_LONG).show();
+
+//        UnCatch.getInstance().start(this);
 
 
     }
@@ -49,10 +51,18 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
     @Override
     public void onClick(View view) {
+
+
         if(view == btn_fix){
+
+            File f = new File ("/storage/emulated/0/updateDex/path.jar");
+            if(f.exists()){
+                DexManager.loadDex(this,f,DexManager.USER);
+            }
+
+            SourceSystemManager ssm = new SourceSystemManager();
             txt_source.setText("修复后:"+ssm.getSource());
             Toast.makeText(this,SourceSystemManager.printName(),Toast.LENGTH_LONG).show();
-            restartApp();
         }
 
         if(view == btn_getFix){
@@ -68,12 +78,6 @@ public class MainActivity extends Activity implements View.OnClickListener {
                 }
             },url);
         }
-    }
-
-    public void restartApp(){
-        Intent intent = getPackageManager().getLaunchIntentForPackage(getPackageName());
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        startActivity(intent);
     }
 
 }
