@@ -1,1 +1,1 @@
-include ':app'
+include ':app', ':codefix', ':buildSrc', ':pathmodule',':hotfixlib'

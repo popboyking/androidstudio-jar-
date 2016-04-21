@@ -2,14 +2,26 @@ apply plugin:'com.android.application'
 import com.android.build.gradle.AppPlugin
 import proguard.gradle.ProGuardTask
 
+
+task('processWithJavassist') << {
+    String classPath = file('build\\intermediates\\classes\\debug')//项目编译class所在目录
+    dodola.patch.PatchClass.process(classPath, project(':codefix').buildDir
+            .absolutePath + '\\intermediates\\classes\\debug')//第二个参数是codefix的class所在目录
+
+}
+
 android {
-    compileSdkVersion 23
+    compileSdkVersion 17
     buildToolsVersion "23.0.2"
+
+    lintOptions {
+        abortOnError false
+    }
 
     defaultConfig {
         applicationId "dex.zzcm.com.dexupdate"
-        minSdkVersion 23
-        targetSdkVersion 23
+        minSdkVersion 16
+        targetSdkVersion 20
         versionCode 1
         versionName "1.0"
     }
@@ -19,17 +31,23 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+    applicationVariants.all { variant ->
+        variant.dex.dependsOn << processWithJavassist //在执行dx命令之前将代码打入到class中
+    }
 }
 
 
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    testCompile 'junit:junit:4.12'
+    compile project(":hotfixlib");
+    compile 'com.zhy:okhttputils:2.3.9'
 
-    compile 'com.android.support:appcompat-v7:23.2.0'
-    compile 'com.android.support:design:23.2.0'
 }
+
+
+
 
 /*************************************JAR 打包混淆*******************************************************/
 //dependsOn 可根据实际需要增加或更改

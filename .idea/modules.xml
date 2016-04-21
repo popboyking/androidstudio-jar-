@@ -4,6 +4,10 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/DexUpdate.iml" filepath="$PROJECT_DIR$/DexUpdate.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/buildSrc/buildSrc.iml" filepath="$PROJECT_DIR$/buildSrc/buildSrc.iml" />
+      <module fileurl="file://$PROJECT_DIR$/codefix/codefix.iml" filepath="$PROJECT_DIR$/codefix/codefix.iml" />
+      <module fileurl="file://$PROJECT_DIR$/hotfixlib/hotfixlib.iml" filepath="$PROJECT_DIR$/hotfixlib/hotfixlib.iml" />
+      <module fileurl="file://$PROJECT_DIR$/pathmodule/pathmodule.iml" filepath="$PROJECT_DIR$/pathmodule/pathmodule.iml" />
     </modules>
   </component>
 </project>
